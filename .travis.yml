@@ -1,0 +1,10 @@
+language: go
+go:
+- 1.2
+- release
+- tip
+script:
+- make test
+cache:
+  directories:
+  - .go
