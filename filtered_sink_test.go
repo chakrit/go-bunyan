@@ -3,13 +3,13 @@ package bunyan
 var _ Sink = &FilteredSink{}
 
 func ExampleFilteredSink() {
-	sink := FilterSink(StdoutSink(), LevelFilter(30))
+	sink := FilterSink(StdoutSink(), LevelFilter(INFO))
 
 	records := map[string]int{
-		"first message": 10,
-		"second message": 20,
-		"third message": 30,
-		"fourth message": 40,
+		"first message": TRACE,
+		"second message": DEBUG,
+		"third message": INFO,
+		"fourth message": WARN,
 	}
 
 	for msg, lvl := range records {
