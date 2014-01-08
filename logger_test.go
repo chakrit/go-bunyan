@@ -1,7 +1,11 @@
 package bunyan
 
+import "bytes"
 import "testing"
+import "encoding/json"
 import a "github.com/stretchr/testify/assert"
+
+var _ Sink = &Logger{}
 
 type DummyFilter struct{}
 
@@ -48,4 +52,31 @@ func TestClearFilters(t *testing.T) {
 	logger.Clear()
 	a.Empty(t, logger.filters, "filters array not cleared.")
 	a.Empty(t, logger.sinks, "sinks array not cleared.")
+}
+
+func TestWrite(t *testing.T) {
+	buffer := &bytes.Buffer{}
+	logger := NewEmptyLogger()
+	logger.AddSink(INFO, NewJsonSink(buffer))
+
+	record := NewRecord()
+	record["level"] = INFO
+	record["msg"] = "test message."
+	e := logger.Write(record)
+	a.NoError(t, e)
+
+	result := make(map[string]interface{})
+	e = json.Unmarshal(buffer.Bytes(), &result)
+	a.NoError(t, e)
+
+	a.True(t, len(result) > 0, "output json reading failed!")
+	a.Equal(t, result["level"], INFO, "wrong level written.")
+	a.Equal(t, result["msg"], "test message.", "wrong message written.")
+
+	buffer.Reset()
+	record["level"] = TRACE
+	record["msg"] = "trace message hidden."
+	e = logger.Write(record)
+	a.NoError(t, e)
+	a.Equal(t, buffer.Len(), 0, "trace message should not be written.")
 }

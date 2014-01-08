@@ -42,3 +42,25 @@ func (l *Logger) Clear() {
 	l.filters = make([]Filter, 0, InitialFiltersCapacity)
 }
 
+func (l *Logger) Write(record Record) error {
+	// TODO: Handle Write() errors, never panic
+
+	valid := true
+	for _, filter := range l.filters {
+		valid_ := filter.Apply(record)
+		valid = valid && valid_
+	}
+	if !valid {
+		return nil
+	}
+
+	for _, sink := range l.sinks {
+		e := sink.Write(record)
+		if e != nil {
+			panic(e)
+		}
+	}
+
+	return nil
+}
+
