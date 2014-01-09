@@ -12,7 +12,9 @@ const(
 )
 
 type Log interface{
-	Add(key string, value interface{}) Log // builds new record
+	Sink
+
+	Record(key string, value interface{}) Log // builds new record
 	Child() Log // child logger with what's recorded so far
 
 	Tracef(msg string, args...interface{})
