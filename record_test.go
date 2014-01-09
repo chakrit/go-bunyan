@@ -29,3 +29,12 @@ func TestMergeRecord(t *testing.T) {
 	a.NotNil(t, result["argus"], "keys from second record not merged.")
 	a.Equal(t, result["argus"], "magnimus", "keys from second record has wrong value.")
 }
+
+func TestSetMessagef(t *testing.T) {
+	r := NewSimpleRecord("hello", "world")
+	r.SetMessagef(INFO, "test %s message", "info")
+
+	a.Equal(t, r["hello"], "world", "setting message alter existing keys.")
+	a.Equal(t, r["level"], INFO, "message level not saved.")
+	a.Equal(t, r["msg"], "test info message", "message content not saved.")
+}

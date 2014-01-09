@@ -1,5 +1,7 @@
 package bunyan
 
+import "fmt"
+
 type Record map[string]interface{}
 
 const InitialRecordCapacity = 16
@@ -24,4 +26,8 @@ func MergeRecord(records...Record) Record {
 	}
 
 	return result
+}
+
+func (r Record) SetMessagef(level int, msg string, args...interface{}) {
+	r["level"], r["msg"] = level, fmt.Sprintf(msg, args...)
 }
