@@ -29,9 +29,9 @@ func TestAddSink(t *testing.T) {
 	logger, sink := NewEmptyLogger(), StdoutSink()
 	logger.AddSink(INFO, sink)
 
-	a.IsType(t, &FilteredSink{}, logger.sinks[0], "sink added without filter.")
-	sink_ := logger.sinks[0].(*FilteredSink)
-	a.Equal(t, sink_.sink, sink, "inner sink is not the given sink.")
+	a.IsType(t, &filteredSink{}, logger.sinks[0], "sink added without filter.")
+	sink_ := logger.sinks[0].(*filteredSink)
+	a.Equal(t, sink_.sink, sink, "filter sink outlet is not the given sink.")
 
 	logger, sink = NewEmptyLogger(), StdoutSink()
 	logger.AddSink(EVERYTHING, sink)
@@ -76,6 +76,7 @@ func TestWrite(t *testing.T) {
 	buffer.Reset()
 	record["level"] = TRACE
 	record["msg"] = "trace message hidden."
+
 	e = logger.Write(record)
 	a.NoError(t, e)
 	a.Equal(t, buffer.Len(), 0, "trace message should not be written.")

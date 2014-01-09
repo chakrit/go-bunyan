@@ -28,7 +28,7 @@ func (l *Logger) AddSink(level int, sink Sink) {
 	case level == EVERYTHING:
 		l.sinks = append(l.sinks, sink)
 	default:
-		sink = FilterSink(sink, LevelFilter(level))
+		sink = FilterSink(level, sink)
 		l.sinks = append(l.sinks, sink)
 	}
 }

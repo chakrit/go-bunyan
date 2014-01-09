@@ -1,9 +1,7 @@
 package bunyan
 
-var _ Sink = &FilteredSink{}
-
-func ExampleFilteredSink() {
-	sink := FilterSink(StdoutSink(), LevelFilter(INFO))
+func ExampleFilterSink() {
+	sink := FilterSink(INFO, StdoutSink())
 
 	records := map[string]int{
 		"first message": TRACE,
