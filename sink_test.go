@@ -4,7 +4,7 @@ import "io"
 import "io/ioutil"
 import "os"
 
-func ExampleStdout() {
+func ExampleStdoutSink() {
 	sink := StdoutSink()
 	sink.Write(NewSimpleRecord("the quick", "brown fox"))
 	// Output:
