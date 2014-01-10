@@ -6,8 +6,28 @@ type Logger struct {
 	infos    []Info
 }
 
-func NewLogger(sinks ...Sink) Log {
-	return &Logger{nil, sinks[:], nil}
+func NewEmptyLogger() Log {
+	return &Logger{nil, []Sink{}, []Info{}}
+}
+
+func NewLogger(name string, sinks ...Sink) Log {
+	infos := []Info{
+		SimpleInfo("name", name),
+		PidInfo(),
+		HostnameInfo(),
+		TimeInfo(),
+	}
+
+	return &Logger{nil, sinks[:], infos}
+}
+
+// TODO: NewChildLogger
+func NewChildLogger(parent Log, extraTemplate Record) Log {
+	template := NewRecord()
+	template.TemplateMerge(extraTemplate)
+	template.TemplateMerge(parent.Template())
+
+	return &Logger{template, []Sink{parent}, []Info{}}
 }
 
 func (logger *Logger) Write(record Record) error {
