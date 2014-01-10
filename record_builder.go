@@ -14,7 +14,7 @@ func NewRecordBuilder(target Sink, template Record) *RecordBuilder {
 }
 
 func (b *RecordBuilder) Write(record Record) error {
-	return b.sink.Write(record)
+	return b.sink.Write(record.TemplateMerge(b.template))
 }
 
 func (b *RecordBuilder) Template() Record {
@@ -32,7 +32,7 @@ func (b *RecordBuilder) Recordf(key, value string, args...interface{}) Log {
 
 func (b *RecordBuilder) Child() Log {
 	// TODO: Creates new *Logger with record as child template
-	panic("not implemented.")
+	return NewChildLogger(b.sink, b.record.TemplateMerge(b.template))
 }
 
 func (b *RecordBuilder) Tracef(msg string, args...interface{}) {
@@ -60,7 +60,10 @@ func (b *RecordBuilder) Fatalf(msg string, args...interface{}) {
 }
 
 func (b *RecordBuilder) writef(level int, msg string, args...interface{}) {
-	// TODO: Handle write errors.
 	b.record.SetMessagef(level, msg, args...)
-	b.sink.Write(b.record.TemplateMerge(b.template))
+	e := b.Write(b.record)
+	// TODO: Do not panic. Recover gracefully, maybe write something to stderr.
+	if e != nil {
+		panic(e)
+	}
 }

@@ -22,6 +22,21 @@ func TestNewRecordBuilder(t *testing.T) {
 	a.Nil(t, builder.template, "builder does not initialize template unnecessarily.")
 }
 
+func TestWrite(t *testing.T) {
+	template := NewSimpleRecord("templated", "value")
+	builder, buffer := newTestBuilder(template)
+
+	record := NewSimpleRecord("hello", "world")
+	e := builder.Write(record)
+	a.NoError(t, e)
+
+	result := make(map[string]interface{})
+	json.Unmarshal(buffer.Bytes(), &result)
+
+	a.Equal(t, result["hello"], "world", "record not written to sink.")
+	a.Equal(t, result["templated"], "value", "template not merged into written record.")
+}
+
 func TestRecord(t *testing.T) {
 	builder, _ := newTestBuilder(nil)
 
@@ -37,6 +52,17 @@ func TestRecordf(t *testing.T) {
 	a.NotNil(t, builder.record["test"], "value not saved.")
 	a.Equal(t, builder.record["test"], "value result", "value not properly formatted.")
 	a.Equal(t, result, builder, "does not return self.")
+}
+
+func TestChild(t *testing.T) {
+	builder, _ := newTestBuilder(nil)
+	child := builder.Record("childkey", "value").Child()
+	a.NotNil(t, child, "cannot create child logger from record builder.")
+	a.NotEqual(t, child, builder, "child must not be the builder.")
+
+	template := child.Template()
+	a.NotNil(t, template, "child should have non-nil template.")
+	a.Equal(t, template["childkey"], "value", "child template has incorrect values.")
 }
 
 func TestLogMethods(t *testing.T) {
