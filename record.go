@@ -17,15 +17,14 @@ func NewSimpleRecord(key string, value interface{}) Record {
 	return record
 }
 
-func MergeRecord(records...Record) Record {
-	result := NewRecord()
-	for _, record := range records {
-		for k, v := range record {
-			result[k] = v
+func (r Record) TemplateMerge(template Record) Record {
+	for k, v := range template {
+		if _, ok := r[k]; !ok {
+			r[k] = v
 		}
 	}
 
-	return result
+	return r
 }
 
 func (r Record) SetMessagef(level int, msg string, args...interface{}) {
