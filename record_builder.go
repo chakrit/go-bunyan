@@ -5,6 +5,8 @@ import "fmt"
 
 type RecordBuilder struct{
 	sink Sink
+	// TODO: RecordBuilder does not actually needs a template since the sink should
+	// automatically applies its template (if it has one, such as when it's a parent logger)
 	template Record
 	record Record
 }

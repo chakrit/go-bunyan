@@ -22,7 +22,7 @@ func TestNewRecordBuilder(t *testing.T) {
 	a.Nil(t, builder.template, "builder does not initialize template unnecessarily.")
 }
 
-func TestWrite(t *testing.T) {
+func TestRecordBuilder_Write(t *testing.T) {
 	template := NewSimpleRecord("templated", "value")
 	builder, buffer := newTestBuilder(template)
 
@@ -37,7 +37,7 @@ func TestWrite(t *testing.T) {
 	a.Equal(t, result["templated"], "value", "template not merged into written record.")
 }
 
-func TestRecord(t *testing.T) {
+func TestRecordBuilder_Record(t *testing.T) {
 	builder, _ := newTestBuilder(nil)
 
 	result := builder.Record("test", "value")

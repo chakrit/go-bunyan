@@ -21,29 +21,34 @@ func NewLogger(name string, sinks ...Sink) Log {
 	return &Logger{nil, sinks[:], infos}
 }
 
-// TODO: NewChildLogger
-func NewChildLogger(parent Log, extraTemplate Record) Log {
-	template := NewRecord()
-	template.TemplateMerge(extraTemplate)
-	template.TemplateMerge(parent.Template())
-
+func NewChildLogger(parent Sink, template Record) Log {
 	return &Logger{template, []Sink{parent}, []Info{}}
 }
 
 func (logger *Logger) Write(record Record) error {
+	record.TemplateMerge(logger.template)
+	for _, info := range logger.infos {
+		record.SetIfNot(info.Key(), info.Value())
+	}
+
+	for _, sink := range logger.sinks {
+		sink.Write(record)
+	}
 	return nil
 }
 
 func (logger *Logger) Template() Record {
-	return nil
+	return logger.template
 }
 
 func (logger *Logger) Record(key string, value interface{}) Log {
-	return nil
+	return NewRecordBuilder(logger, nil).Record(key, value)
 }
+
 func (logger *Logger) Recordf(key, value string, args ...interface{}) Log {
 	return nil
 }
+
 func (logger *Logger) Child() Log {
 	return nil
 }

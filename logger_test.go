@@ -1,6 +1,9 @@
 package bunyan
 
+import "os"
+import "bytes"
 import "testing"
+import "encoding/json"
 import a "github.com/stretchr/testify/assert"
 
 var _ Log = &Logger{}
@@ -22,8 +25,7 @@ func TestNewLogger(t *testing.T) {
 }
 
 func TestChildLogger(t *testing.T) {
-	sink := StdoutSink()
-	parent := NewLogger("test-logger", sink).(*Logger)
+	parent, _ := newTestLogger()
 	parent.template = NewSimpleRecord("parent", "key")
 
 	template := NewSimpleRecord("extra", "value")
@@ -33,3 +35,58 @@ func TestChildLogger(t *testing.T) {
 	a.Equal(t, result.sinks[0], parent, "child should should use parent as sink.")
 	a.Empty(t, result.infos, "child should start with empty infos.")
 }
+
+func TestLogger_Write(t *testing.T) {
+	logger, buffer := newTestLogger()
+	logger.template = NewSimpleRecord("test", "template")
+
+	record := NewSimpleRecord("real", "record")
+	record["pid"] = "overridden"
+	e := logger.Write(record)
+	a.NoError(t, e)
+
+	result := make(map[string]interface{})
+	json.Unmarshal(buffer.Bytes(), &result)
+
+	a.Equal(t, result["test"], "template", "template values not written to output.")
+	a.Equal(t, result["real"], "record", "record data not written to output.")
+
+	// test some standard infos overrides
+	a.NotEqual(t, result["pid"], os.Getpid(), "info must be overridden by user keys.")
+	a.IsType(t, "", result["time"], "registered time info not written to output.")
+
+	// TODO: Test error propagation
+}
+
+func TestTemplate(t *testing.T) {
+	logger, _ := newTestLogger()
+	template := NewSimpleRecord("test", "template")
+	logger.template = template
+
+	result := logger.Template()
+	a.Equal(t, result, template, "logger template not returned.")
+}
+
+func TestLogger_Record(t *testing.T) {
+	logger, buffer := newTestLogger()
+	builder := logger.Record("test", "value")
+
+	a.NotNil(t, builder, "should returns a new record builder.")
+	a.IsType(t, builder, &RecordBuilder{}, "should returns a new record builder.")
+
+	builder.Record("more test", "value").Tracef("hi msg")
+
+	// TODO: DRY this make(map) thing and just make Record accepts []byte
+	result := make(map[string]interface{})
+	json.Unmarshal(buffer.Bytes(), &result)
+
+	a.Equal(t, result["test"], "value", "output should contains recorded value.")
+	a.Equal(t, result["more test"], "value", "output should contains recorded value.")
+	a.Equal(t, result["msg"], "hi msg", "output have incorrect message.")
+}
+
+func newTestLogger() (*Logger, *bytes.Buffer) {
+	buffer := &bytes.Buffer{}
+	return NewLogger("test-logger", NewJsonSink(buffer)).(*Logger), buffer
+}
+
