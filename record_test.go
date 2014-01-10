@@ -17,6 +17,17 @@ func TestNewSimpleRecord(t *testing.T) {
 	a.Equal(t, len(result), 1, "result have incorrect length.")
 }
 
+func TestSetIfNot(t *testing.T) {
+	record := NewSimpleRecord("hello", "world")
+
+	result := record.SetIfNot("hello", "not world")
+	a.Equal(t, result, record, "should returns self.")
+	a.Equal(t, result["hello"], "world", "should not overrides value already set.")
+
+	result = result.SetIfNot("second", "key")
+	a.Equal(t, result["second"], "key", "should save values not already set.")
+}
+
 func TestTemplateMerge(t *testing.T) {
 	one := NewSimpleRecord("hello", "world")
 	one["argus"] = "was not here"
