@@ -14,13 +14,16 @@ const(
 type Log interface{
 	Sink
 
-	Record(key string, value interface{}) Log // builds new record
-	Child() Log // child logger with what's recorded so far
+	Template() Record // gets the record template that'll be merged on Write()
 
-	Tracef(msg string, args...interface{})
+	Record(key string, value interface{}) Log
+	Recordf(key, value string, args...interface{}) Log
+	Child() Log // create child logger with what's recorded so far as template
+
+	Tracef(msg string, args...interface{}) // logs with what's recorded so far included
 	Debugf(msg string, args...interface{})
 	Infof(msg string, args...interface{})
 	Warnf(msg string, args...interface{})
 	Errorf(msg string, args...interface{})
-	Fatal(msg string, args...interface{})
+	Fatalf(msg string, args...interface{})
 }
