@@ -24,10 +24,17 @@ func TestMergeRecord(t *testing.T) {
 
 	result := MergeRecord(one, two)
 	a.NotNil(t, result, "merged record should not be nil.")
+	a.Equal(t, len(result), 2, "merged record has incorrect length.")
 	a.NotNil(t, result["hello"], "keys from first record not merged.")
 	a.Equal(t, result["hello"], "world", "keys from first record has wrong value.")
 	a.NotNil(t, result["argus"], "keys from second record not merged.")
 	a.Equal(t, result["argus"], "magnimus", "keys from second record has wrong value.")
+
+	one = NewSimpleRecord("argus", "maximus")
+	result = MergeRecord(nil, one)
+	a.NotNil(t, result, "merged record should not be nil even if args has nil.")
+	a.Equal(t, len(result), 1, "merged record has incorrect length.")
+	a.Equal(t, result["argus"], "maximus", "non-nil args key not merged into result.")
 }
 
 func TestSetMessagef(t *testing.T) {
