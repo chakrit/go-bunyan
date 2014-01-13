@@ -20,13 +20,9 @@ func NewLogger(output Sink) Log {
 	return NewRecordBuilder(output)
 }
 
-func NewStdLogger(name string) Log {
-	return newStdLogger(name, StdoutSink())
-}
-
-func newStdLogger(name string, sink Sink) Log {
+func NewStdLogger(name string, output Sink) Log {
 	// allow changing sink in tests
-	log := NewRecordBuilder(sink).
+	log := NewRecordBuilder(output).
 		Record("name", name).
 		Include(LogVersionInfo(0)). // should follows node-bunyan
 		Include(PidInfo()).

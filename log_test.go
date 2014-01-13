@@ -13,7 +13,7 @@ func TestNewLogger(t *testing.T) {
 
 func TestNewStdLogger(t *testing.T) {
 	buffer := &bytes.Buffer{}
-	logger := newStdLogger("log_test", NewJsonSink(buffer))
+	logger := NewStdLogger("log_test", NewJsonSink(buffer))
 	a.NotNil(t, logger, "cannot create standard logger.")
 
 	logger.Tracef("hello %s", "world")
