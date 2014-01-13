@@ -22,6 +22,10 @@ fmt:
 	$(GO) fmt $(PKG)
 test: test-deps
 	$(GO) test $(PKG)
+tdd: test-deps
+	clear
+	date
+	@$(GO) test $(PKG)
 cover: test-deps
 	$(GO) test -cover $(PKG)
 clean:
