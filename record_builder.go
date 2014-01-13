@@ -5,22 +5,15 @@ import "fmt"
 
 type RecordBuilder struct{
 	sink Sink
-	// TODO: RecordBuilder does not actually needs a template since the sink should
-	// automatically applies its template (if it has one, such as when it's a parent logger)
-	template Record
 	record Record
 }
 
-func NewRecordBuilder(target Sink, template Record) *RecordBuilder {
-	return &RecordBuilder{target, template, NewRecord()}
+func NewRecordBuilder(target Sink) *RecordBuilder {
+	return &RecordBuilder{target, NewRecord()}
 }
 
 func (b *RecordBuilder) Write(record Record) error {
-	return b.sink.Write(record.TemplateMerge(b.template))
-}
-
-func (b *RecordBuilder) Template() Record {
-	return b.template
+	return b.sink.Write(record)
 }
 
 func (b *RecordBuilder) Record(key string, value interface{}) Log {
@@ -33,8 +26,7 @@ func (b *RecordBuilder) Recordf(key, value string, args...interface{}) Log {
 }
 
 func (b *RecordBuilder) Child() Log {
-	// TODO: Creates new *Logger with record as child template
-	return NewChildLogger(b.sink, b.record.TemplateMerge(b.template))
+	return NewChildLogger(b.sink, b.record)
 }
 
 func (b *RecordBuilder) Tracef(msg string, args...interface{}) {
