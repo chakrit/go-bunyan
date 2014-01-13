@@ -28,6 +28,7 @@ func newStdLogger(name string, sink Sink) Log {
 	// allow changing sink in tests
 	log := NewRecordBuilder(sink).
 		Record("name", name).
+		Include(LogVersionInfo(0)). // should follows node-bunyan
 		Include(PidInfo()).
 		Include(HostnameInfo()).
 		Include(TimeInfo())

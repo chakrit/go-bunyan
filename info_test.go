@@ -17,6 +17,10 @@ func TestSimpleInfo(t *testing.T) {
 	checkInfo(t, SimpleInfo("key", "value"), "key", "value")
 }
 
+func TestLogVersionInfo(t *testing.T) {
+	checkInfo(t, LogVersionInfo(0), "v", 0)
+}
+
 func TestPidInfo(t *testing.T) {
 	checkInfo(t, PidInfo(), "pid", os.Getpid())
 }

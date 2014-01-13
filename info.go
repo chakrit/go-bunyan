@@ -42,6 +42,10 @@ func SimpleInfo(key string, value interface{}) Info {
 	return &simpleInfo{key, value}
 }
 
+func LogVersionInfo(v int) Info {
+	return SimpleInfo("v", v)
+}
+
 func PidInfo() Info {
 	return SimpleInfo("pid", os.Getpid())
 }

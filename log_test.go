@@ -25,6 +25,7 @@ func TestNewStdLogger(t *testing.T) {
 	a.NoError(t, e, "while determining hostname.")
 
 	a.Equal(t, result["name"], "log_test", "log name not written.")
+	a.Equal(t, result["v"], 0, "output record does not include bunyan record version.")
 	a.Equal(t, result["pid"], os.Getpid(), "PID not included.")
 	a.Equal(t, result["hostname"], hostname, "Hostname not included.")
 	a.IsType(t, "str", result["time"], "time value not included (or not a string.)")
