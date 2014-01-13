@@ -49,6 +49,6 @@ func (r Record) TemplateMerge(template Record) Record {
 	return r
 }
 
-func (r Record) SetMessagef(level int, msg string, args...interface{}) {
+func (r Record) SetMessagef(level Level, msg string, args...interface{}) {
 	r["level"], r["msg"] = level, fmt.Sprintf(msg, args...)
 }

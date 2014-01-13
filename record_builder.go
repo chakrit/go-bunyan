@@ -53,7 +53,7 @@ func (b *RecordBuilder) Fatalf(msg string, args...interface{}) {
 	b.writef(FATAL, msg, args...)
 }
 
-func (b *RecordBuilder) writef(level int, msg string, args...interface{}) {
+func (b *RecordBuilder) writef(level Level, msg string, args...interface{}) {
 	b.record.SetMessagef(level, msg, args...)
 	e := b.Write(b.record)
 	// TODO: Do not panic. Recover gracefully, maybe write something to stderr.

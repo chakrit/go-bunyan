@@ -3,7 +3,7 @@ package bunyan
 func ExampleFilterSink() {
 	sink := FilterSink(INFO, StdoutSink())
 
-	records := map[string]int{
+	records := map[string]Level{
 		"first message": TRACE,
 		"second message": DEBUG,
 		"third message": INFO,
