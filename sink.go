@@ -18,6 +18,13 @@ func SinkFunc(write func(record Record) error) Sink {
 	return &funcSink{write}
 }
 
+func InfoSink(target Sink, info Info) Sink {
+	return SinkFunc(func(record Record) error {
+		record.SetIfNot(info.Key(), info.Value())
+		return target.Write(record)
+	})
+}
+
 func StdoutSink() Sink {
 	return NewJsonSink(os.Stdout)
 }

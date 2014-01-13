@@ -23,6 +23,13 @@ func TestSinkFunc(t *testing.T) {
 	a.Equal(t, record, given, "sink function were given wrong record.")
 }
 
+func ExampleInfoSink() {
+	sink := InfoSink(StdoutSink(), SimpleInfo("hello", "world"))
+	sink.Write(NewSimpleRecord("msg", "message"))
+	// Output:
+	// {"hello":"world","msg":"message"}
+}
+
 func ExampleStdoutSink() {
 	sink := StdoutSink()
 	sink.Write(NewSimpleRecord("the quick", "brown fox"))
