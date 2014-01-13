@@ -17,7 +17,7 @@ func (b *RecordBuilder) Write(record Record) error {
 }
 
 func (b *RecordBuilder) Include(info Info) Log {
-	return NewRecordBuilder(InfoSink(b.sink, info))
+	return NewRecordBuilder(InfoSink(b, info))
 }
 
 func (b *RecordBuilder) Record(key string, value interface{}) Log {

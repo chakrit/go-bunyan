@@ -1,6 +1,5 @@
 package bunyan
 
-
 type Log interface{
 	Sink
 
@@ -15,4 +14,23 @@ type Log interface{
 	Warnf(msg string, args...interface{})
 	Errorf(msg string, args...interface{})
 	Fatalf(msg string, args...interface{})
+}
+
+func NewLogger(output Sink) Log {
+	return NewRecordBuilder(output)
+}
+
+func NewStdLogger(name string) Log {
+	return newStdLogger(name, StdoutSink())
+}
+
+func newStdLogger(name string, sink Sink) Log {
+	// allow changing sink in tests
+	log := NewRecordBuilder(sink).
+		Record("name", name).
+		Include(PidInfo()).
+		Include(HostnameInfo()).
+		Include(TimeInfo())
+
+	return log
 }
