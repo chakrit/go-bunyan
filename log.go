@@ -4,6 +4,7 @@ package bunyan
 type Log interface{
 	Sink
 
+	Include(info Info) Log
 	Record(key string, value interface{}) Log
 	Recordf(key, value string, args...interface{}) Log
 	Child() Log // create child logger with what's recorded so far as template

@@ -16,6 +16,17 @@ const (
 	UNKNOWN = 255
 )
 
+func AllLevels() []Level {
+	return []Level{
+		TRACE,
+		DEBUG,
+		INFO,
+		WARN,
+		ERROR,
+		FATAL,
+	}
+}
+
 func (l Level) String() string {
 	switch l {
 	case EVERYTHING:

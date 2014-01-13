@@ -1,7 +1,6 @@
 package bunyan
 
 import "fmt"
-// NOTE: Meant to be used as one-off record building
 
 type RecordBuilder struct{
 	sink Sink
@@ -13,7 +12,12 @@ func NewRecordBuilder(target Sink) *RecordBuilder {
 }
 
 func (b *RecordBuilder) Write(record Record) error {
+	record.TemplateMerge(b.record)
 	return b.sink.Write(record)
+}
+
+func (b *RecordBuilder) Include(info Info) Log {
+	return NewRecordBuilder(InfoSink(b.sink, info))
 }
 
 func (b *RecordBuilder) Record(key string, value interface{}) Log {
@@ -26,7 +30,7 @@ func (b *RecordBuilder) Recordf(key, value string, args...interface{}) Log {
 }
 
 func (b *RecordBuilder) Child() Log {
-	return NewChildLogger(b.sink, b.record)
+	return NewRecordBuilder(b)
 }
 
 func (b *RecordBuilder) Tracef(msg string, args...interface{}) {
@@ -54,8 +58,10 @@ func (b *RecordBuilder) Fatalf(msg string, args...interface{}) {
 }
 
 func (b *RecordBuilder) writef(level Level, msg string, args...interface{}) {
-	b.record.SetMessagef(level, msg, args...)
-	e := b.Write(b.record)
+	record := NewRecord()
+	record.SetMessagef(level, msg, args...)
+	e := b.Write(record)
+
 	// TODO: Do not panic. Recover gracefully, maybe write something to stderr.
 	if e != nil {
 		panic(e)
