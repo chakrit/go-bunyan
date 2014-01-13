@@ -17,6 +17,26 @@ func TestNewSimpleRecord(t *testing.T) {
 	a.Equal(t, len(result), 1, "result have incorrect length.")
 }
 
+func TestUnmarshalRecord(t *testing.T) {
+	str := "{\"hello\":\"world\",\"witch\":\"craft\"}"
+
+	result, e := UnmarshalRecord([]byte(str))
+	a.NoError(t, e)
+	a.Equal(t, result["hello"], "world", "unmarshalled record wrong.")
+	a.Equal(t, result["witch"], "craft", "unmarshalled record wrong.")
+}
+
+func TestMarshal(t *testing.T) {
+	record := NewSimpleRecord("hello", "world")
+	record["witch"] = "craft"
+
+	result, e := record.Marshal()
+	expected := "{\"hello\":\"world\",\"witch\":\"craft\"}"
+
+	a.NoError(t, e)
+	a.Equal(t, string(result), expected, "marshalled result wrong.")
+}
+
 func TestSetIfNot(t *testing.T) {
 	record := NewSimpleRecord("hello", "world")
 

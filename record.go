@@ -1,6 +1,7 @@
 package bunyan
 
 import "fmt"
+import "encoding/json"
 
 type Record map[string]interface{}
 
@@ -15,6 +16,21 @@ func NewSimpleRecord(key string, value interface{}) Record {
 	record := NewRecord()
 	record[key] = value
 	return record
+}
+
+func UnmarshalRecord(bytes []byte) (Record, error) {
+	result := make(map[string]interface{})
+	e := json.Unmarshal(bytes, &result)
+	if e != nil {
+		return nil, e
+	}
+
+	return Record(result), nil
+}
+
+func (r Record) Marshal() ([]byte, error) {
+	result, e := json.Marshal(r)
+	return result, e
 }
 
 func (r Record) SetIfNot(key string, value interface{}) Record {
