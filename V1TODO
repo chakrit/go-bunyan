@@ -1,0 +1,5 @@
+* MultiSink
+* NewStdLogger(name, sink, sink, sink)
+* README
+* godoc
+* Formatter tool
