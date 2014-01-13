@@ -6,6 +6,18 @@ type Sink interface{
 	Write(record Record) error
 }
 
+type funcSink struct{
+	write func(record Record) error
+}
+
+func (sink *funcSink) Write(record Record) error {
+	return sink.write(record)
+}
+
+func SinkFunc(write func(record Record) error) Sink {
+	return &funcSink{write}
+}
+
 func StdoutSink() Sink {
 	return NewJsonSink(os.Stdout)
 }

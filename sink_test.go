@@ -3,6 +3,25 @@ package bunyan
 import "io"
 import "io/ioutil"
 import "os"
+import "fmt"
+import "testing"
+import a "github.com/stretchr/testify/assert"
+
+func TestSinkFunc(t *testing.T) {
+	var given Record
+	var err error = fmt.Errorf("test error.")
+
+	sink := SinkFunc(func(record Record) error {
+		given = record
+		return err
+	})
+	a.NotNil(t, sink, "cannot create a sink from a function.")
+
+	record := NewSimpleRecord("hello", "world")
+	e := sink.Write(record)
+	a.Equal(t, err, e, "returns error from sink function.")
+	a.Equal(t, record, given, "sink function were given wrong record.")
+}
 
 func ExampleStdoutSink() {
 	sink := StdoutSink()
