@@ -18,6 +18,12 @@ func SinkFunc(write func(record Record) error) Sink {
 	return &funcSink{write}
 }
 
+func NilSink() Sink {
+	return SinkFunc(func(record Record) error {
+		return nil // no-op
+	})
+}
+
 func InfoSink(target Sink, info Info) Sink {
 	return SinkFunc(func(record Record) error {
 		record.SetIfNot(info.Key(), info.Value())
