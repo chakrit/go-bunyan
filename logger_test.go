@@ -3,7 +3,6 @@ package bunyan
 import "os"
 import "bytes"
 import "testing"
-import "encoding/json"
 import a "github.com/stretchr/testify/assert"
 
 var _ Log = &Logger{}
@@ -45,9 +44,7 @@ func TestLogger_Write(t *testing.T) {
 	e := logger.Write(record)
 	a.NoError(t, e)
 
-	result := make(map[string]interface{})
-	json.Unmarshal(buffer.Bytes(), &result)
-
+	result, e := UnmarshalRecord(buffer.Bytes())
 	a.Equal(t, result["test"], "template", "template values not written to output.")
 	a.Equal(t, result["real"], "record", "record data not written to output.")
 
@@ -76,10 +73,8 @@ func TestLogger_Record(t *testing.T) {
 
 	builder.Record("more test", "value").Tracef("hi msg")
 
-	// TODO: DRY this make(map) thing and just make Record accepts []byte
-	result := make(map[string]interface{})
-	json.Unmarshal(buffer.Bytes(), &result)
-
+	result, e := UnmarshalRecord(buffer.Bytes())
+	a.NoError(t, e)
 	a.Equal(t, result["test"], "value", "output should contains recorded value.")
 	a.Equal(t, result["more test"], "value", "output should contains recorded value.")
 	a.Equal(t, result["msg"], "hi msg", "output have incorrect message.")

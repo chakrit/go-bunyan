@@ -3,7 +3,6 @@ package bunyan
 import "fmt"
 import "bytes"
 import "testing"
-import "encoding/json"
 import a "github.com/stretchr/testify/assert"
 
 var _ Log = &RecordBuilder{}
@@ -30,9 +29,8 @@ func TestRecordBuilder_Write(t *testing.T) {
 	e := builder.Write(record)
 	a.NoError(t, e)
 
-	result := make(map[string]interface{})
-	json.Unmarshal(buffer.Bytes(), &result)
-
+	result, e := UnmarshalRecord(buffer.Bytes())
+	a.NoError(t, e)
 	a.Equal(t, result["hello"], "world", "record not written to sink.")
 	a.Equal(t, result["templated"], "value", "template not merged into written record.")
 }
@@ -77,10 +75,8 @@ func TestLogMethods(t *testing.T) {
 		buffer.Reset()
 		f(msg, args...)
 
-		result := make(map[string]interface{})
-		e := json.Unmarshal(buffer.Bytes(), &result)
+		result, e := UnmarshalRecord(buffer.Bytes())
 		a.NoError(t, e)
-
 		a.Equal(t, result["level"], level, "result has wrong level value.")
 		a.Equal(t, result["msg"], fmt.Sprintf(msg, args...), "result has wrong message.")
 
