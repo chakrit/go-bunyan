@@ -1,8 +1,10 @@
 package bunyan
 
+import "io"
 import "fmt"
 import "bytes"
 import "testing"
+import "encoding/json"
 import a "github.com/stretchr/testify/assert"
 
 var _ Log = &RecordBuilder{}
@@ -33,6 +35,15 @@ func TestRecordBuilder_Record(t *testing.T) {
 	json := "{\"extra\":\"info\",\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		return log.Record("extra", "info").Write(helloWorld())
+	})
+
+	// multiple Record() should be indenpendent from each other.
+	json = "{\"hello\":\"world\",\"more\":\"info\"}"
+	excercise(t, json, func(log Log) error {
+		e := log.Record("extra", "info").Write(helloWorld())
+		a.NoError(t, e)
+
+		return log.Record("more", "info").Write(helloWorld())
 	})
 }
 
@@ -96,12 +107,25 @@ func excercise(t *testing.T, expectedJson string, ex func(log Log) error) {
 	expected, e := UnmarshalRecord([]byte(expectedJson))
 	a.NoError(t, e)
 
-	result, e := UnmarshalRecord(buffer.Bytes())
-	a.NoError(t, e)
-	a.Equal(t, len(expected), len(result), "result has wrongg number of keys.")
+	decoder := json.NewDecoder(buffer)
+	var raw map[string]interface{}
+	for {
+		tmp := make(map[string]interface{})
+		e = decoder.Decode(&tmp)
+		if e == io.EOF {
+			break;
+		}
+
+		a.NoError(t, e)
+		raw = tmp
+	}
+
+	result := Record(raw)
+	a.Equal(t, len(expected), len(result), "result has wrong number of keys.")
 	if len(result) != len(expected) {
 		str, _ := result.Marshal()
-		panic(string(str))
+		stre, _ := expected.Marshal()
+		panic(string(str) + " != " + string(stre))
 	}
 
 	for k, v := range expected {

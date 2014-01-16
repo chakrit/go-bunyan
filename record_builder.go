@@ -28,9 +28,11 @@ func (b *RecordBuilder) Include(info Info) Log {
 
 // Record() adds the given key and value to the logger and returns itself.
 func (b *RecordBuilder) Record(key string, value interface{}) Log {
-	// TODO: Needs Child() calls
-	b.record[key] = value
-	return b
+	// TODO: Optimize. Don't New too damn much. Probably can get rid of TemplateMerge
+	// altogether.
+	builder := NewRecordBuilder(b)
+	builder.record[key] = value
+	return builder
 }
 
 // Recordf() provides formatting convenience that simply calls Record() with the formatted
