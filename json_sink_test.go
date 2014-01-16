@@ -18,7 +18,6 @@ func TestNewJsonSink(t *testing.T) {
 func ExampleJsonSink() {
 	sink := NewJsonSink(os.Stdout)
 	sink.Write(NewSimpleRecord("hello", "world"))
-
 	// Output:
 	// {"hello":"world"}
 }

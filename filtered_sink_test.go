@@ -4,9 +4,9 @@ func ExampleFilterSink() {
 	sink := FilterSink(INFO, StdoutSink())
 
 	records := map[string]Level{
-		"first message": TRACE,
+		"first message":  TRACE,
 		"second message": DEBUG,
-		"third message": INFO,
+		"third message":  INFO,
 		"fourth message": WARN,
 	}
 

@@ -52,7 +52,7 @@ func TestRecordBuilder_Child(t *testing.T) {
 }
 
 func TestLogMethods(t *testing.T) {
-	type logFunc func(msg string, args...interface{})
+	type logFunc func(msg string, args ...interface{})
 	funcFor := func(lvl Level, log Log) logFunc {
 		switch lvl {
 		case TRACE:

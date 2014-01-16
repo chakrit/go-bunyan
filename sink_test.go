@@ -54,7 +54,7 @@ func ExampleFileSink() {
 		panic(e)
 	}
 
-  _, e = io.Copy(os.Stdout, tmp)
+	_, e = io.Copy(os.Stdout, tmp)
 	if e != nil {
 		panic(e)
 	}
@@ -62,4 +62,3 @@ func ExampleFileSink() {
 	// Output:
 	// {"the brown":"quick fox"}
 }
-

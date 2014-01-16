@@ -36,4 +36,3 @@ func TestNewStdLogger(t *testing.T) {
 	diff := time.Now().Sub(ref)
 	a.True(t, diff.Seconds() < 1, "time recorded is not the correct time.")
 }
-
