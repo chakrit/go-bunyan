@@ -6,12 +6,12 @@ import "bytes"
 import "testing"
 import a "github.com/stretchr/testify/assert"
 
-func TestNewLogger(t *testing.T) {
+func TestLog_NewLogger(t *testing.T) {
 	logger := NewLogger(NilSink())
 	a.NotNil(t, logger, "cannot create new logger.")
 }
 
-func TestNewStdLogger(t *testing.T) {
+func TestLog_NewStdLogger(t *testing.T) {
 	buffer := &bytes.Buffer{}
 	logger := NewStdLogger("log_test", NewJsonSink(buffer))
 	a.NotNil(t, logger, "cannot create standard logger.")

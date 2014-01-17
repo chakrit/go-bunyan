@@ -23,9 +23,10 @@ type Log interface {
 // NewLogger() creates a new, empty logger attached to the given Sink. This is not
 // recommended unless you have a very specific use case or have fine-grained customization
 // needs. NewStdLogger() is recommended over this method.
-func NewLogger(output Sink) Log {
-	return NewRecordBuilder(output)
-}
+// TODO: Fix
+// func NewLogger(output Sink) Log {
+// 	return NewLogger(output)
+// }
 
 // NewStdLogger() creates the standard bunyan logger with the given name and attached to
 // the given Sink. Standard information includes the version key, PID, machine's hostname
@@ -35,7 +36,7 @@ func NewLogger(output Sink) Log {
 // tool.
 func NewStdLogger(name string, output Sink) Log {
 	// allow changing sink in tests
-	log := NewRecordBuilder(output).
+	log := NewLogger(output).
 		Record("name", name).
 		Include(LogVersionInfo(0)). // should follows node-bunyan
 		Include(PidInfo()).

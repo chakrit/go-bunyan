@@ -7,31 +7,31 @@ import "testing"
 import "encoding/json"
 import a "github.com/stretchr/testify/assert"
 
-var _ Log = &RecordBuilder{}
+var _ Log = &Logger{}
 
-func TestNewRecordBuilder(t *testing.T) {
+func TestNewLogger(t *testing.T) {
 	sink := StdoutSink()
-	builder := NewRecordBuilder(sink)
+	builder := NewLogger(sink)
 	a.NotNil(t, builder, "cannot create new builder")
 	a.NotNil(t, builder.record, "builder does not initialize new record.")
 	a.Equal(t, builder.sink, sink, "builder does not saves given sink.")
 }
 
-func TestRecordBuilder_Write(t *testing.T) {
+func TestLogger_Write(t *testing.T) {
 	json := "{\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		return log.Write(helloWorld())
 	})
 }
 
-func TestRecordBuilder_Include(t *testing.T) {
+func TestLogger_Include(t *testing.T) {
 	json := "{\"info\":\"included\",\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		return log.Include(SimpleInfo("info", "included")).Write(helloWorld())
 	})
 }
 
-func TestRecordBuilder_Record(t *testing.T) {
+func TestLogger_Record(t *testing.T) {
 	json := "{\"extra\":\"info\",\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		return log.Record("extra", "info").Write(helloWorld())
@@ -47,14 +47,14 @@ func TestRecordBuilder_Record(t *testing.T) {
 	})
 }
 
-func TestRecordBuilder_Recordf(t *testing.T) {
+func TestLogger_Recordf(t *testing.T) {
 	json := "{\"extra\":\"info formatted\",\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		return log.Recordf("extra", "info %s", "formatted").Write(helloWorld())
 	})
 }
 
-func TestRecordBuilder_Child(t *testing.T) {
+func TestLogger_Child(t *testing.T) {
 	json := "{\"child info\":\"via parent\",\"hello\":\"world\"}"
 	excercise(t, json, func(log Log) error {
 		child := log.Record("child info", "via parent").Child()
@@ -99,7 +99,7 @@ func helloWorld() Record {
 
 func excercise(t *testing.T, expectedJson string, ex func(log Log) error) {
 	buffer := &bytes.Buffer{}
-	log := NewRecordBuilder(NewJsonSink(buffer))
+	log := NewLogger(NewJsonSink(buffer))
 
 	e := ex(log)
 	a.NoError(t, e)
