@@ -20,13 +20,12 @@ type Log interface {
 	Fatalf(msg string, args ...interface{})
 }
 
-// NewLogger() creates a new, empty logger attached to the given Sink. This is not
+// NewEmptyLogger() creates a new, empty logger attached to the given Sink. This is not
 // recommended unless you have a very specific use case or have fine-grained customization
 // needs. NewStdLogger() is recommended over this method.
-// TODO: Fix
-// func NewLogger(output Sink) Log {
-// 	return NewLogger(output)
-// }
+func NewEmptyLogger(output Sink) Log {
+	return NewLogger(output)
+}
 
 // NewStdLogger() creates the standard bunyan logger with the given name and attached to
 // the given Sink. Standard information includes the version key, PID, machine's hostname
