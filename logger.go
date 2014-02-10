@@ -39,7 +39,6 @@ func (l *Logger) Record(key string, value interface{}) Log {
 // Recordf() provides formatting convenience that simply calls Record() with the formatted
 // value.
 func (l *Logger) Recordf(key, value string, args ...interface{}) Log {
-	// TODO: Needs Child() calls
 	return l.Record(key, fmt.Sprintf(value, args...))
 }
 

@@ -52,6 +52,15 @@ func TestLogger_Recordf(t *testing.T) {
 	excercise(t, json, func(log Log) error {
 		return log.Recordf("extra", "info %s", "formatted").Write(helloWorld())
 	})
+
+	// multiple Recordf() should be independent from each other.
+	json = "{\"hello\":\"world\",\"more\":\"info formatted\"}"
+	excercise(t, json, func(log Log) error {
+		e := log.Recordf("extra", "info %s", "formatted").Write(helloWorld())
+		a.NoError(t, e)
+
+		return log.Recordf("more", "info %s", "formatted").Write(helloWorld())
+	})
 }
 
 func TestLogger_Child(t *testing.T) {
