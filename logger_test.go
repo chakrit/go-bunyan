@@ -121,7 +121,7 @@ func excercise(t *testing.T, expectedJson string, ex func(log Log) error) {
 		tmp := make(map[string]interface{})
 		e = decoder.Decode(&tmp)
 		if e == io.EOF {
-			break;
+			break
 		}
 
 		a.NoError(t, e)

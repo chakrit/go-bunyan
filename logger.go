@@ -50,8 +50,8 @@ func (l *Logger) Child() Log {
 
 func (l *Logger) Tracef(msg string, args ...interface{}) { l.send(TRACE, msg, args...) }
 func (l *Logger) Debugf(msg string, args ...interface{}) { l.send(DEBUG, msg, args...) }
-func (l *Logger) Infof(msg string, args ...interface{}) { l.send(INFO, msg, args...) }
-func (l *Logger) Warnf(msg string, args ...interface{}) { l.send(WARN, msg, args...) }
+func (l *Logger) Infof(msg string, args ...interface{})  { l.send(INFO, msg, args...) }
+func (l *Logger) Warnf(msg string, args ...interface{})  { l.send(WARN, msg, args...) }
 func (l *Logger) Errorf(msg string, args ...interface{}) { l.send(ERROR, msg, args...) }
 func (l *Logger) Fatalf(msg string, args ...interface{}) { l.send(FATAL, msg, args...) }
 
