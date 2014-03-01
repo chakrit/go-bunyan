@@ -1,5 +1,6 @@
 * MultiSink
-* NewStdLogger(name, sink, sink, sink)
+* Logger overload using MultiSink
 * README
 * godoc
 * Formatter tool
+* Cleanup types that shouldn't need to be exported.
