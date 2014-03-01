@@ -43,4 +43,3 @@ func ExampleFormatSink() {
 	//   address: ":8080"
 	//   user: "chakrit"
 }
-
