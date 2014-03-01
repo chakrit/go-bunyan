@@ -1,8 +1,9 @@
-package bunyan
+package bunyan_test
 
 import "os"
 import "bytes"
 import "testing"
+import . "github.com/chakrit/go-bunyan"
 import a "github.com/stretchr/testify/assert"
 
 var _ Sink = NewJsonSink(&bytes.Buffer{})

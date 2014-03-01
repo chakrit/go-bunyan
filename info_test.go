@@ -1,8 +1,9 @@
-package bunyan
+package bunyan_test
 
 import "os"
 import "time"
 import "testing"
+import . "github.com/chakrit/go-bunyan"
 import a "github.com/stretchr/testify/assert"
 
 func TestInfoFunc(t *testing.T) {

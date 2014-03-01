@@ -1,10 +1,11 @@
-package bunyan
+package bunyan_test
 
 import "io"
 import "fmt"
 import "bytes"
 import "testing"
 import "encoding/json"
+import . "github.com/chakrit/go-bunyan"
 import a "github.com/stretchr/testify/assert"
 
 var _ Log = &Logger{}
@@ -13,8 +14,6 @@ func TestNewLogger(t *testing.T) {
 	sink := StdoutSink()
 	builder := NewLogger(sink)
 	a.NotNil(t, builder, "cannot create new builder")
-	a.NotNil(t, builder.record, "builder does not initialize new record.")
-	a.Equal(t, builder.sink, sink, "builder does not saves given sink.")
 }
 
 func TestLogger_Write(t *testing.T) {

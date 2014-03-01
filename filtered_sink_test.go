@@ -1,4 +1,6 @@
-package bunyan
+package bunyan_test
+
+import . "github.com/chakrit/go-bunyan"
 
 func ExampleFilterSink() {
 	sink := FilterSink(INFO, StdoutSink())

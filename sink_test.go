@@ -1,10 +1,11 @@
-package bunyan
+package bunyan_test
 
 import "io"
 import "io/ioutil"
 import "os"
 import "fmt"
 import "testing"
+import . "github.com/chakrit/go-bunyan"
 import a "github.com/stretchr/testify/assert"
 
 func TestSinkFunc(t *testing.T) {

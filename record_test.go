@@ -1,6 +1,7 @@
-package bunyan
+package bunyan_test
 
 import "testing"
+import . "github.com/chakrit/go-bunyan"
 import a "github.com/stretchr/testify/assert"
 
 func TestNewRecord(t *testing.T) {
