@@ -1,10 +1,10 @@
 language: go
 go:
-- 1.2
+- "1.2"
+- "1.2.1"
 - release
 - tip
 script:
-- make test
-cache:
-  directories:
-  - .go
+- go get -d .
+- go get -d -t .
+- go test ./...
