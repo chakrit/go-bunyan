@@ -27,7 +27,6 @@ func ExampleFormatSink() {
 		"hostname": "go-bunyan.local",
 		"time":     t,
 		"address":  ":8080",
-		"user":     "chakrit",
 		"level":    INFO,
 		"msg":      "starting up...",
 		"name":     "bunyan",
@@ -41,5 +40,4 @@ func ExampleFormatSink() {
 	// Output:
 	// [2014-03-02T00:33:59+07:00]  INFO: bunyan/6503 on go-bunyan.local: starting up...
 	//   address: ":8080"
-	//   user: "chakrit"
 }
