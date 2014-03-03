@@ -3,4 +3,6 @@
 * README
 * godoc
 * Formatter tool
+  * +Colors
+  * condition filter string
 * Cleanup types that shouldn't need to be exported.
